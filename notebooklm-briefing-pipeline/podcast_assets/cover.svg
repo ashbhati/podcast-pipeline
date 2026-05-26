@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3000" height="3000" viewBox="0 0 3000 3000" role="img" aria-labelledby="title desc">
+  <title id="title">Ashish AI Briefings</title>
+  <desc id="desc">Podcast cover art for morning and evening NotebookLM AI briefings.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1020"/>
+      <stop offset="50%" stop-color="#182C62"/>
+      <stop offset="100%" stop-color="#31C4FF"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7CF7D4"/>
+      <stop offset="100%" stop-color="#F8FF7A"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="3000" height="3000" fill="url(#bg)"/>
+  <circle cx="2360" cy="560" r="260" fill="#7CF7D4" opacity="0.16"/>
+  <circle cx="640" cy="2350" r="340" fill="#F8FF7A" opacity="0.08"/>
+
+  <rect x="210" y="210" width="2580" height="2580" rx="120" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="8"/>
+
+  <g filter="url(#glow)">
+    <rect x="380" y="620" width="280" height="280" rx="56" fill="#0B1020" stroke="url(#accent)" stroke-width="18"/>
+    <path d="M470 720h100v-38c0-22 18-40 40-40h38v100h38c22 0 40 18 40 40v38H666v100c0 22-18 40-40 40h-38V860H470c-22 0-40-18-40-40v-38c0-22 18-40 40-40z" fill="url(#accent)"/>
+  </g>
+
+  <text x="380" y="1170" fill="#EAF3FF" font-family="Arial, Helvetica, sans-serif" font-size="168" font-weight="700" letter-spacing="3">ASHISH</text>
+  <text x="380" y="1390" fill="#EAF3FF" font-family="Arial, Helvetica, sans-serif" font-size="248" font-weight="800" letter-spacing="4">AI BRIEFINGS</text>
+
+  <rect x="382" y="1515" width="1620" height="18" rx="9" fill="url(#accent)"/>
+
+  <text x="380" y="1715" fill="#C7D6F8" font-family="Arial, Helvetica, sans-serif" font-size="108" font-weight="600">Morning + Evening technical audio briefings</text>
+  <text x="380" y="1868" fill="#C7D6F8" font-family="Arial, Helvetica, sans-serif" font-size="92">NotebookLM-powered • operator-grade • dense signal</text>
+
+  <g transform="translate(380 2120)">
+    <rect x="0" y="0" width="2240" height="360" rx="72" fill="rgba(8,12,24,0.42)" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+    <text x="90" y="145" fill="#F7FBFF" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="700">AM</text>
+    <text x="90" y="255" fill="#C7D6F8" font-family="Arial, Helvetica, sans-serif" font-size="72">priority reads • market moves • technical shifts</text>
+    <text x="1320" y="145" fill="#F7FBFF" font-family="Arial, Helvetica, sans-serif" font-size="96" font-weight="700">PM</text>
+    <text x="1320" y="255" fill="#C7D6F8" font-family="Arial, Helvetica, sans-serif" font-size="72">what changed by close • implications • next moves</text>
+  </g>
+</svg>

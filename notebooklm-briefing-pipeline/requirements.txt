@@ -1,0 +1,19 @@
+﻿# NotebookLM Briefing Pipeline
+# Core ingestion/dedupe/pack-building uses Python stdlib.
+# NotebookLM publishing is wired to jacob-bd/notebooklm-mcp-cli.
+
+notebooklm-mcp-cli>=0.4.4
+
+# ── Optional: activate Discord intake ────────────────────────────────────────
+# The discord_adapter uses urllib (stdlib) — no discord.py needed.
+# If you prefer the official library:
+# discord.py>=2.3
+
+# ── Optional: activate NotebookLM via Google Drive ───────────────────────────
+# google-auth>=2.0
+# google-api-python-client>=2.0
+
+# ── Optional: activate NotebookLM via browser automation ─────────────────────
+# playwright>=1.40
+# (then run: playwright install chromium)
+

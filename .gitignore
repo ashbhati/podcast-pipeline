@@ -1,0 +1,33 @@
+# Local config / credentials
+config.json
+.env
+*.env
+*.secret
+
+# Runtime state
+*.db
+*.sqlite
+logs/
+outputs/
+podcast_cache/
+raw_vault/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Generated briefings/audio
+morning_ai_briefing_*.txt
+evening_ai_briefing_*.txt
+research-paper-audio-outputs/
+*.wav
+*.mp3
+
+# Cloudflare local state
+.wrangler/
+.dev.vars
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

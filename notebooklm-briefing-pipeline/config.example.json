@@ -1,0 +1,93 @@
+﻿{
+  "_comment": "Example config. Copy to config.json and fill in local credentials/paths. Do not commit real tokens or app passwords.",
+  "discord": {
+    "enabled": false,
+    "bot_token": "YOUR_DISCORD_BOT_TOKEN",
+    "intake_channel_id": "YOUR_CHANNEL_ID",
+    "briefing_channel_id": "YOUR_CHANNEL_ID"
+  },
+  "notebooklm": {
+    "enabled": true,
+    "notebook_url": "https://notebooklm.google.com",
+    "default_notebook_name": "AI Daily Briefing",
+    "profile_name": "default",
+    "create_audio": true,
+    "public_by_default": true,
+    "audio_focus_prompt": "Generate a high-intensity, operator-grade technical briefing, not a generic recap. Target roughly 30-40 minutes of crisp, dense insight with zero fluff and minimal repetition. Prioritize implementation reality: architecture choices, benchmarks, tooling constraints, failure modes, and tradeoffs. When possible, compare claims across sources and call out evidence quality, uncertainty, and hype versus signal. Focus on concrete technical mechanisms, measurable evidence, enterprise safety/governance implications, second-order product/GTM/org effects, and what an advanced AI operator should do in the next 24-72 hours.",
+    "audio_format": "deep_dive",
+    "audio_length": "long",
+    "auto_delete_old_generated_notebooks": true,
+    "notebook_retention_keep_latest": 80,
+    "generated_notebook_prefixes": [
+      "AI Briefing ",
+      "Research Paper of the Day - "
+    ]
+  },
+  "notifications": {
+    "audio_email": {
+      "enabled": true,
+      "to": [
+        "recipient@example.com"
+      ],
+      "smtp": {
+        "host": "smtp.example.com",
+        "port": 587,
+        "username": "sender@example.com",
+        "password": "YOUR_SMTP_APP_PASSWORD",
+        "from": "sender@example.com"
+      }
+    }
+  },
+  "raw_capture": {
+    "enabled": true,
+    "output_root": "./raw/news"
+  },
+  "podcast_bridge": {
+    "host": "127.0.0.1",
+    "port": 8788,
+    "base_url": "https://podcast.example.com",
+    "site_url": "https://podcast.example.com",
+    "title": "Ashish's AI News Briefings",
+    "description": "Morning and evening AI news briefings, plus research paper deep dives.",
+    "author": "Ashish Bhatia",
+    "owner_name": "Ashish Bhatia",
+    "owner_email": "owner@example.com",
+    "language": "en-us",
+    "explicit": "false",
+    "category": "Technology",
+    "subcategory": "Tech News",
+    "podcast_type": "episodic",
+    "cache_dir": "./podcast_cache",
+    "assets_dir": "./podcast_assets",
+    "image_url": "https://podcast.example.com/podcast-cover.jpg",
+    "ffmpeg_path": "ffmpeg",
+    "ab_test_notebook_id": "",
+    "token": "",
+    "max_items": 100,
+    "prefer_mp3": true,
+    "warm_recent_items": 0,
+    "exclude_unready_audio": true,
+    "r2_audio_retention_enabled": true,
+    "r2_audio_retention_max_gb": 8.0
+  },
+  "pipeline": {
+    "am_target_items": 15,
+    "pm_target_items": 10,
+    "priority_score_threshold": 9.0,
+    "redundancy_lookback_days": 7,
+    "manual_intake_windows": {
+      "AM": {
+        "start_day_offset": -1,
+        "start_time": "16:00",
+        "end_day_offset": 0,
+        "end_time": "05:35"
+      },
+      "PM": {
+        "start_day_offset": 0,
+        "start_time": "05:30",
+        "end_day_offset": 0,
+        "end_time": "16:05"
+      }
+    }
+  }
+}

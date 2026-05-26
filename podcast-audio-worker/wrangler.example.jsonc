@@ -1,0 +1,26 @@
+﻿{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "podcast-audio-worker",
+  "main": "src/index.js",
+  "compatibility_date": "2026-05-10",
+  "routes": [
+    {
+      "pattern": "podcast.example.com/feed.xml",
+      "zone_name": "example.com"
+    },
+    {
+      "pattern": "podcast.example.com/audio/*",
+      "zone_name": "example.com"
+    },
+    {
+      "pattern": "podcast.example.com/*",
+      "zone_name": "example.com"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "AUDIO_BUCKET",
+      "bucket_name": "your-podcast-audio-bucket"
+    }
+  ]
+}
