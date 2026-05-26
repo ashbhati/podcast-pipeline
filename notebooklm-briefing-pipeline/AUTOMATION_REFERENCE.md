@@ -1,4 +1,4 @@
-﻿# NotebookLM Commute Briefing Automation Reference
+# NotebookLM Commute Briefing Automation Reference
 
 _Last updated: 2026-03-10_
 
@@ -45,7 +45,7 @@ _Temporary placeholder diagram. Replace this section later with an Excalidraw ve
 ```mermaid
 flowchart TD
     A[Morning AI news briefing cron\n5:30 AM ET] --> B[morning_ai_briefing_YYYY-MM-DD.txt]
-    C[Evening AI news briefing cron\n4:00 PM ET] --> D[evening_ai_briefing_YYYY-MM-DD.txt]
+    C[Evening AI news briefing cron\n3:20 PM ET] --> D[evening_ai_briefing_YYYY-MM-DD.txt]
     E[Discord intake channel\n1480723611458342923] --> F[Discord intake adapter]
 
     B --> G[NotebookLM briefing pipeline]
@@ -59,7 +59,7 @@ flowchart TD
     J --> L[PM markdown/json pack]
 
     K --> M[NotebookLM adapter\n5:45 AM ET]
-    L --> N[NotebookLM adapter\n4:10 PM ET]
+    L --> N[NotebookLM adapter\n3:30 PM ET]
 
     M --> O[NotebookLM AM notebook + audio]
     N --> P[NotebookLM PM notebook + audio]
@@ -141,7 +141,7 @@ If it is not written correctly, the AM audio pipeline will not have the intended
 ## 4.2 Evening written briefing
 - **Job name:** `Evening AI news briefing`
 - **Job ID:** `3f20e625-135f-4f6f-8891-aeb81b84154a`
-- **Schedule:** `4:00 PM ET` daily
+- **Schedule:** `3:20 PM ET` daily
 - **Delivery:** Discord + email
 - **Model:** `openai-codex/gpt-5.4`
 
@@ -182,7 +182,7 @@ This gives ~15 minutes between the morning text briefing (5:30) and the AM Noteb
 ## 4.4 NotebookLM PM commute publish
 - **Job name:** `NotebookLM PM commute briefing publish`
 - **Job ID:** `fbb4d65f-f2be-4132-8de0-d703c9caf979`
-- **Schedule:** `4:10 PM ET` daily
+- **Schedule:** `3:30 PM ET` daily
 - **Delivery channel:** `1480723611458342923`
 - **Model:** `openai-codex/gpt-5.4`
 
@@ -194,7 +194,7 @@ This gives ~15 minutes between the morning text briefing (5:30) and the AM Noteb
   - or `NOTEBOOKLM_PM_ERROR: <reason>`
 
 ### Intended timing
-This gives ~10 minutes between the evening written briefing (4:00) and the PM NotebookLM publish job (4:10), so the audio should be ready before the 4:15 PM commute.
+This gives ~10 minutes between the evening written briefing (3:20) and the PM NotebookLM publish job (3:30), so the audio should be ready before the end-of-work commute.
 
 ---
 
@@ -253,9 +253,9 @@ Workspace briefing source files:
    - or error
 
 ## 6.2 PM flow
-1. Evening cron generates the written AI briefing at **4:00 PM ET**
+1. Evening cron generates the written AI briefing at **3:20 PM ET**
 2. It saves the rendered text to `evening_ai_briefing_YYYY-MM-DD.txt`
-3. PM NotebookLM cron runs at **4:10 PM ET**
+3. PM NotebookLM cron runs at **3:30 PM ET**
 4. Pipeline ingests:
    - saved evening briefing file(s)
    - manual Discord intake items in the PM window
@@ -275,7 +275,7 @@ The intake channel is used to decide which manually shared links belong to AM vs
 
 ## AM manual window
 Configured as:
-- start: **previous day 4:00 PM ET**
+- start: **previous day 3:30 PM ET**
 - end: **current day 5:35 AM ET**
 
 Meaning:
@@ -592,8 +592,8 @@ python show_status.py --publishes
   - `NOTEBOOKLM_AM_READY: <url>`
 
 ### Evening
-- 4:00 PM ET → evening text briefing to Discord/email
-- 4:10 PM ET → NotebookLM PM publish to intake/related channel
+- 3:20 PM ET → evening text briefing to Discord/email
+- 3:30 PM ET → NotebookLM PM publish to intake/related channel
 - result message in intake channel:
   - `NOTEBOOKLM_PM_READY: <url>`
 

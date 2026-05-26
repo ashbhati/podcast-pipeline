@@ -1,4 +1,4 @@
-﻿# NotebookLM Briefing Pipeline
+# NotebookLM Briefing Pipeline
 
 Converts morning + evening AI briefing files (plus manual Discord URL drops)
 into two daily NotebookLM-ready commute packs.
@@ -168,7 +168,7 @@ Current operational contract:
 - AM NotebookLM publish: `45 5 * * 1-5` America/New_York
   - runs `run_pipeline.py --date {{today}} --mode AM`
   - then runs `scripts/podcast_feed_health_check.py --recent 20 --check 6 --recover --require-date {{today}} --require-mode AM`
-- PM NotebookLM publish: `10 16 * * *` America/New_York
+- PM NotebookLM publish: `30 15 * * *` America/New_York
   - runs `run_pipeline.py --date {{today}} --mode PM`
   - then runs `scripts/podcast_feed_health_check.py --recent 20 --check 6 --recover --require-date {{today}} --require-mode PM`
 - Research publish: `0 12 * * *` America/New_York

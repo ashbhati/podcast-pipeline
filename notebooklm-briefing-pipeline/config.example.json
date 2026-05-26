@@ -1,4 +1,4 @@
-﻿{
+{
   "_comment": "Example config. Copy to config.json and fill in local credentials/paths. Do not commit real tokens or app passwords.",
   "discord": {
     "enabled": false,
@@ -86,7 +86,7 @@
         "start_day_offset": 0,
         "start_time": "05:30",
         "end_day_offset": 0,
-        "end_time": "16:05"
+        "end_time": "15:30"
       }
     }
   }

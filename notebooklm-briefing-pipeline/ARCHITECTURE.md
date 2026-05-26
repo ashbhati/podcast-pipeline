@@ -1,4 +1,4 @@
-﻿# NotebookLM Briefing Pipeline — Architecture
+# NotebookLM Briefing Pipeline — Architecture
 
 ## Purpose
 
@@ -20,7 +20,7 @@ optimised for commute listening:
 │                  Existing Cron Jobs                 │
 │  5:45 AM  AM NotebookLM publish + feed check        │
 │ 12:00 PM  research paper publish + feed check       │
-│  4:10 PM  PM NotebookLM publish + feed check        │
+│  3:30 PM  PM NotebookLM publish + feed check        │
 │ hourly :15 self-healing podcast feed check          │
 └───────────────────────┬─────────────────────────────┘
                         │  file on disk
@@ -233,7 +233,7 @@ Current operational contract:
 
 - AM publish: `45 5 * * 1-5` America/New_York, then required feed verification for today's AM episode.
 - Research publish: `0 12 * * *` America/New_York, then required feed verification for today's research episode.
-- PM publish: `10 16 * * *` America/New_York, then required feed verification for today's PM episode.
+- PM publish: `30 15 * * *` America/New_York, then required feed verification for today's PM episode.
 - Self-healing feed check: hourly at `:15`, using `--recent 50 --check 20 --recover`.
 - Broader feed audit: daily at `9:30 AM`, using `--recent 100 --check 50 --recover`.
 
