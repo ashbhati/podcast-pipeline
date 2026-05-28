@@ -15,66 +15,94 @@ optimised for commute listening:
 
 ## System Context
 
-```mermaid
-flowchart LR
-    subgraph sources["Source intake"]
-        written["Written AI briefings<br/>AM / PM text files"]
-        manual["Manual article links<br/>Discord intake"]
-        research["Daily research paper<br/>optional deep dive"]
-    end
+```text
++====================================================================================+
+|                         PODCAST PIPELINE WORKFLOW                                   |
++====================================================================================+
 
-    subgraph curate["Curation pipeline"]
-        ingest["Parse + normalize<br/>stories, URLs, scores"]
-        dedupe["Deduplicate<br/>SQLite item IDs"]
-        classify["Classify streams<br/>Priority · Agents · Research<br/>Policy · Products · Case Studies"]
-        packs["Build source packs<br/>AM · PM · Research<br/>Markdown + JSON"]
-    end
+  1) SOURCE INTAKE                 2) CURATION                    3) NOTEBOOKLM
+  ----------------                 -----------                    -------------
 
-    subgraph notebooklm["NotebookLM publishing"]
-        notebook["Create fresh notebook"]
-        upload["Upload source pack"]
-        audio["Request Audio Overview<br/>with focus prompt"]
-        runs["Record publish run<br/>state.db"]
-    end
+  +----------------------+         +----------------------+        +----------------------+
+  | Written AI briefings |         | Parse + normalize    |        | Create fresh         |
+  | AM / PM text files   |-------> | stories, URLs,       |------> | NotebookLM notebook  |
+  +----------------------+         | scores, metadata     |        +----------+-----------+
+                                   +----------+-----------+                   |
+  +----------------------+                    |                              v
+  | Manual article links |                    v                   +----------------------+
+  | Discord intake       |-------> +----------------------+        | Upload markdown      |
+  +----------------------+         | Deduplicate          |        | source pack          |
+                                   | SQLite item IDs      |        +----------+-----------+
+  +----------------------+         +----------+-----------+                   |
+  | Daily research paper |                    |                              v
+  | optional deep dive   |----------------+   v                   +----------------------+
+  +----------------------+                | +----------------------+        | Request Audio        |
+                                          | | Classify streams     |        | Overview with focus  |
+                                          | | Priority / Agents /  |        | prompt               |
+                                          | | Research / Policy /  |        +----------+-----------+
+                                          | | Products / Cases     |                   |
+                                          | +----------+-----------+                   v
+                                          |            |                    +----------------------+
+                                          |            v                    | Record publish run   |
+                                          +-> +----------------------+      | in state.db          |
+                                             | Build source packs    |      +----------+-----------+
+                                             | AM / PM / Research    |                 |
+                                             | Markdown + JSON       |                 |
+                                             +----------------------+                 |
+                                                                                    v
++====================================================================================+
+|                         4) PODCAST PUBLICATION                                      |
++====================================================================================+
 
-    subgraph podcast["Podcast publication"]
-        health["Feed health check"]
-        ready{"Audio ready?"}
-        cache["Download + cache audio"]
-        transcode["Transcode WAV → MP3"]
-        r2["Upload MP3 to Cloudflare R2"]
-        rss["Generate RSS feed.xml"]
-        worker["Cloudflare Worker serves<br/>feed + byte-range audio"]
-    end
+                         +----------------------+
+                         | Feed health check    |
+                         | required episode?    |
+                         +----------+-----------+
+                                    |
+                                    v
+                             +-------------+
+                             | Audio ready?|
+                             +------+------+
+                                    |
+                +-------------------+-------------------+
+                |                                       |
+                | no                                    | yes
+                v                                       v
+  +------------------------------+       +------------------------------+
+  | APPLE_FEED_PENDING           |       | Download/cache audio          |
+  | Hourly self-healing retries  |       +--------------+---------------+
+  +---------------+--------------+                      |
+                  |                                     v
+                  |                      +------------------------------+
+                  |                      | Transcode WAV to MP3          |
+                  |                      +--------------+---------------+
+                  |                                     |
+                  |                                     v
+                  |                      +------------------------------+
+                  |                      | Upload MP3 to Cloudflare R2   |
+                  |                      | audio/<notebook_id>.mp3       |
+                  |                      +--------------+---------------+
+                  |                                     |
+                  |                                     v
+                  |                      +------------------------------+
+                  |                      | Generate RSS feed.xml         |
+                  |                      +--------------+---------------+
+                  |                                     |
+                  |                                     v
+                  |                      +------------------------------+
+                  |                      | Cloudflare Worker serves      |
+                  |                      | feed + byte-range audio       |
+                  |                      +--------------+---------------+
+                  |                                     |
+                  |                                     v
+                  |                      +------------------------------+
+                  |                      | Apple Podcasts + podcast apps |
+                  |                      +------------------------------+
+                  |
+                  +-------------> next health check cycle
 
-    subgraph listeners["Listening surfaces"]
-        apple["Apple Podcasts"]
-        clients["Podcast apps / browsers"]
-    end
-
-    written --> ingest
-    manual --> ingest
-    research --> packs
-    ingest --> dedupe --> classify --> packs
-    packs --> notebook --> upload --> audio --> runs
-    runs --> health --> ready
-    ready -- "not yet" --> retry["Mark pending<br/>self-healing retry"]
-    retry --> health
-    ready -- "yes" --> cache --> transcode --> r2 --> rss --> worker
-    worker --> apple
-    worker --> clients
-
-    classDef source fill:#eef6ff,stroke:#4c8eda,color:#0b3558;
-    classDef process fill:#f4f0ff,stroke:#8b5cf6,color:#2e1065;
-    classDef publish fill:#ecfdf5,stroke:#10b981,color:#064e3b;
-    classDef decision fill:#fff7ed,stroke:#f97316,color:#7c2d12;
-    classDef output fill:#fef2f2,stroke:#ef4444,color:#7f1d1d;
-
-    class written,manual,research source;
-    class ingest,dedupe,classify,packs,notebook,upload,audio,runs process;
-    class health,cache,transcode,r2,rss,worker publish;
-    class ready decision;
-    class apple,clients,retry output;
+Readiness rule: NotebookLM publish success means audio was requested; Apple/podcast
+readiness only starts after the feed contains the episode and the public MP3 is reachable.
 ```
 
 ---
