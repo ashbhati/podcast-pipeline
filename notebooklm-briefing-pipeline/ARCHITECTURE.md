@@ -15,44 +15,66 @@ optimised for commute listening:
 
 ## System Context
 
-```
-┌─────────────────────────────────────────────────────┐
-│                  Existing Cron Jobs                 │
-│  5:45 AM  AM NotebookLM publish + feed check        │
-│ 12:00 PM  research paper publish + feed check       │
-│  3:30 PM  PM NotebookLM publish + feed check        │
-│ hourly :15 self-healing podcast feed check          │
-└───────────────────────┬─────────────────────────────┘
-                        │  file on disk
-                        ▼
-┌─────────────────────────────────────────────────────┐
-│           NotebookLM Briefing Pipeline              │
-│                                                     │
-│  ┌──────────────┐   ┌──────────────────────────┐   │
-│  │  Ingestion   │   │    Discord Adapter        │   │
-│  │  (file)      │   │  channel 1480723611...    │   │
-│  └──────┬───────┘   └────────────┬─────────────┘   │
-│         └──────────┬─────────────┘                  │
-│                    ▼                                 │
-│           ┌─────────────────┐                       │
-│           │   Dedupe        │  (SQLite item_id PK)  │
-│           └────────┬────────┘                       │
-│                    ▼                                 │
-│           ┌─────────────────┐                       │
-│           │   Classifier    │  keyword heuristic    │
-│           └────────┬────────┘                       │
-│                    ▼                                 │
-│           ┌─────────────────┐                       │
-│           │  Pack Builder   │  AM + PM split        │
-│           └────────┬────────┘                       │
-│                    ▼                                 │
-│    outputs/YYYY-MM-DD_{AM,PM}_briefing.{md,json}    │
-│                    │                                 │
-└────────────────────┼────────────────────────────────┘
-                     ▼
-         ┌───────────────────────┐
-         │  NotebookLM Adapter   │  ← notebooklm-mcp-cli backed
-         └───────────────────────┘
+```mermaid
+flowchart LR
+    subgraph sources["Source intake"]
+        written["Written AI briefings<br/>AM / PM text files"]
+        manual["Manual article links<br/>Discord intake"]
+        research["Daily research paper<br/>optional deep dive"]
+    end
+
+    subgraph curate["Curation pipeline"]
+        ingest["Parse + normalize<br/>stories, URLs, scores"]
+        dedupe["Deduplicate<br/>SQLite item IDs"]
+        classify["Classify streams<br/>Priority · Agents · Research<br/>Policy · Products · Case Studies"]
+        packs["Build source packs<br/>AM · PM · Research<br/>Markdown + JSON"]
+    end
+
+    subgraph notebooklm["NotebookLM publishing"]
+        notebook["Create fresh notebook"]
+        upload["Upload source pack"]
+        audio["Request Audio Overview<br/>with focus prompt"]
+        runs["Record publish run<br/>state.db"]
+    end
+
+    subgraph podcast["Podcast publication"]
+        health["Feed health check"]
+        ready{"Audio ready?"}
+        cache["Download + cache audio"]
+        transcode["Transcode WAV → MP3"]
+        r2["Upload MP3 to Cloudflare R2"]
+        rss["Generate RSS feed.xml"]
+        worker["Cloudflare Worker serves<br/>feed + byte-range audio"]
+    end
+
+    subgraph listeners["Listening surfaces"]
+        apple["Apple Podcasts"]
+        clients["Podcast apps / browsers"]
+    end
+
+    written --> ingest
+    manual --> ingest
+    research --> packs
+    ingest --> dedupe --> classify --> packs
+    packs --> notebook --> upload --> audio --> runs
+    runs --> health --> ready
+    ready -- "not yet" --> retry["Mark pending<br/>self-healing retry"]
+    retry --> health
+    ready -- "yes" --> cache --> transcode --> r2 --> rss --> worker
+    worker --> apple
+    worker --> clients
+
+    classDef source fill:#eef6ff,stroke:#4c8eda,color:#0b3558;
+    classDef process fill:#f4f0ff,stroke:#8b5cf6,color:#2e1065;
+    classDef publish fill:#ecfdf5,stroke:#10b981,color:#064e3b;
+    classDef decision fill:#fff7ed,stroke:#f97316,color:#7c2d12;
+    classDef output fill:#fef2f2,stroke:#ef4444,color:#7f1d1d;
+
+    class written,manual,research source;
+    class ingest,dedupe,classify,packs,notebook,upload,audio,runs process;
+    class health,cache,transcode,r2,rss,worker publish;
+    class ready decision;
+    class apple,clients,retry output;
 ```
 
 ---
