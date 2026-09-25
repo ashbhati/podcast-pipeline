@@ -4,7 +4,7 @@ Discord intake adapter.
 Reads manually-shared URLs from the designated intake channel and
 converts them into BriefingItems for pipeline processing.
 
-Channel: #manual-intake (ID: 1480723611458342923)
+Channel: configured locally; no account-specific channel ID is bundled here.
 """
 from __future__ import annotations
 
@@ -26,8 +26,8 @@ class DiscordIntakeAdapter:
 
     def __init__(self, config: dict, run_logger: Any = None):
         self.token = config.get("bot_token", "")
-        self.channel_id = config.get("intake_channel_id", "1480723611458342923")
-        self.enabled = bool(self.token) and config.get("enabled", False)
+        self.channel_id = str(config.get("intake_channel_id") or "").strip()
+        self.enabled = bool(self.token and self.channel_id) and config.get("enabled", False)
         self.run_logger = run_logger
 
     def fetch_recent_items(
@@ -183,4 +183,3 @@ class DiscordIntakeAdapter:
                 )
 
         return items
-

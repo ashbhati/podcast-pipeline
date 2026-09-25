@@ -80,7 +80,7 @@ notebooklm-briefing-pipeline/
 
 4. Discord intake (optional)
    discord_adapter.py fetches the last 24h of messages from
-   channel 1480723611458342923, extracts URLs and notes.
+   configured intake channel, extracts URLs and notes.
    Disabled by default; activate via config.json.
 
 5. Classification
@@ -110,7 +110,7 @@ notebooklm-briefing-pipeline/
 "discord": {
   "enabled": true,
   "bot_token": "Bot YOUR_TOKEN_HERE",
-  "intake_channel_id": "1480723611458342923"
+  "intake_channel_id": "YOUR_DISCORD_CHANNEL_ID"
 }
 ```
 
@@ -263,4 +263,3 @@ Default fallback: **AI Products**.
 | SQLite state store        | ✅ Done   | Works out of the box                    |
 | Discord intake            | ⚠️ Partial| Add bot_token + enabled=true to config  |
 | NotebookLM publish        | ⚠️ Partial | Implemented via `notebooklm-mcp-cli`; requires `nlm login` auth profile |
-

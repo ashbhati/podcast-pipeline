@@ -206,6 +206,15 @@ def _notify_audio_link(run_date: str, pack_type: str, notebook_url: str, config:
         return False
 
 
+def _insufficient_pack_count(mode: str, pack_counts: dict[str, int], minimum: int) -> list[dict]:
+    editions = ("AM", "PM") if mode == "ALL" else (mode,)
+    return [
+        {"edition": edition, "count": int(pack_counts.get(edition, 0)), "minimum": minimum}
+        for edition in editions
+        if int(pack_counts.get(edition, 0)) < minimum
+    ]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="NotebookLM briefing pipeline")
     parser.add_argument("--date", default=datetime.today().strftime("%Y-%m-%d"), help="Date to process (YYYY-MM-DD)")
@@ -374,10 +383,24 @@ def main() -> int:
         "AM": len(am_items),
         "PM": len(pm_items),
     }
-    if args.mode in ("AM", "PM") and selected_pack_counts[args.mode] == 0:
-        msg = f"{args.mode} pack built with 0 publishable items for {run_date}"
+    minimum_stories = max(1, int(pipeline_cfg.get("minimum_stories_for_audio", 2)))
+    insufficient = _insufficient_pack_count(args.mode, selected_pack_counts, minimum_stories)
+    if insufficient:
+        msg = "insufficient_current_evidence: " + "; ".join(
+            f"{entry['edition']} has {entry['count']} stories; {entry['minimum']} required"
+            for entry in insufficient
+        )
         print(f"  ERROR: {msg}")
-        print(f"NOTEBOOKLM_{args.mode}_ERROR: {msg}")
+        for entry in insufficient:
+            run_logger.event(
+                "audio_eligibility",
+                status="blocked",
+                reason_code="insufficient_current_evidence",
+                edition=entry["edition"],
+                selected_story_count=entry["count"],
+                minimum_story_count=entry["minimum"],
+            )
+            print(f"NOTEBOOKLM_{entry['edition']}_ERROR: {msg}")
         run_logger.finish(status="error", summary=msg)
         return 3
 
@@ -446,6 +469,26 @@ def main() -> int:
                 am_path=str(am_path),
                 pm_path=str(pm_path),
             )
+        rebuilt_counts = {"AM": len(am_items), "PM": len(pm_items)}
+        insufficient = _insufficient_pack_count(args.mode, rebuilt_counts, minimum_stories)
+        if insufficient:
+            msg = "insufficient_current_evidence after raw capture: " + "; ".join(
+                f"{entry['edition']} has {entry['count']} stories; {entry['minimum']} required"
+                for entry in insufficient
+            )
+            for entry in insufficient:
+                run_logger.event(
+                    "audio_eligibility",
+                    status="blocked",
+                    reason_code="insufficient_current_evidence",
+                    edition=entry["edition"],
+                    selected_story_count=entry["count"],
+                    minimum_story_count=entry["minimum"],
+                )
+                print(f"NOTEBOOKLM_{entry['edition']}_ERROR: {msg}")
+            print(f"  ERROR: {msg}")
+            run_logger.finish(status="error", summary=msg)
+            return 3
 
     print("[5/5] Publishing to NotebookLM...")
     nlm_cfg = config.get("notebooklm", {})
@@ -496,4 +539,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

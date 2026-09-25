@@ -82,6 +82,40 @@ def clean_text(text: str) -> str:
     return text.strip()
 
 
+def _jsonld_article_content(soup: BeautifulSoup) -> tuple[str | None, str | None]:
+    """Return structured article title/body when the visible page is a shell."""
+    titles: list[str] = []
+    bodies: list[str] = []
+
+    def visit(value: Any) -> None:
+        if isinstance(value, list):
+            for entry in value:
+                visit(entry)
+        elif isinstance(value, dict):
+            title = value.get("headline") or value.get("name")
+            body = value.get("articleBody")
+            if isinstance(title, str) and title.strip():
+                titles.append(title.strip())
+            if isinstance(body, str) and body.strip():
+                bodies.append(body.strip())
+            for key in ("@graph", "mainEntity", "mainEntityOfPage"):
+                if key in value:
+                    visit(value[key])
+
+    for script in soup.find_all("script", attrs={"type": re.compile(r"application/ld\+json", re.I)}):
+        raw = script.string or script.get_text()
+        if not raw:
+            continue
+        try:
+            visit(json.loads(raw))
+        except (TypeError, ValueError):
+            continue
+
+    title = max(titles, key=len) if titles else None
+    body = max(bodies, key=len) if bodies else None
+    return title, body
+
+
 def pick_best_container(soup: BeautifulSoup):
     selectors = [
         "article",
@@ -117,6 +151,8 @@ def pick_best_container(soup: BeautifulSoup):
 def extract_article(html: str, url: str) -> dict:
     soup = BeautifulSoup(html, "html.parser")
 
+    structured_title, structured_body = _jsonld_article_content(soup)
+
     for tag in soup(["script", "style", "noscript", "svg", "iframe", "form", "button", "aside", "nav", "footer"]):
         tag.decompose()
 
@@ -142,6 +178,7 @@ def extract_article(html: str, url: str) -> dict:
             paragraphs.append(txt)
 
     text = clean_text("\n\n".join(paragraphs))
+    extraction_method = "visible_article_content"
     if len(text) < 500:
         # fallback: all visible paragraphs in document
         paras = []
@@ -150,6 +187,16 @@ def extract_article(html: str, url: str) -> dict:
             if len(txt) >= 30:
                 paras.append(txt)
         text = clean_text("\n\n".join(paras))
+        extraction_method = "visible_document_fallback"
+
+    if len(text) < 500 and structured_body:
+        structured_text = clean_text(structured_body)
+        if len(structured_text) > len(text):
+            text = structured_text
+            extraction_method = "jsonld_article_body"
+
+    if len(text) < 500 and structured_title:
+        title = structured_title
 
     if len(text) < 300:
         raise RuntimeError(f"extract too short ({len(text)} chars)")
@@ -159,6 +206,7 @@ def extract_article(html: str, url: str) -> dict:
         "text": text,
         "char_count": len(text),
         "heading_count": len(headings),
+        "extraction_method": extraction_method,
     }
 
 
@@ -177,6 +225,7 @@ def render_markdown(item, run_date: str, pack_type: str, capture: dict) -> str:
         "stream": item.stream,
         "item_id": item.item_id,
         "char_count": capture["char_count"],
+        "extraction_method": capture.get("extraction_method", "visible_article_content"),
     }
     yaml_lines = ["---"]
     for k, v in frontmatter.items():
@@ -368,4 +417,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

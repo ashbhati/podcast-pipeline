@@ -124,6 +124,8 @@ readiness only starts after the feed contains the episode and the public MP3 is 
 - Empty-feed guard prevents uploading an RSS feed with zero ready MP3 episodes.
 - Health checks verify the live feed, required AM/PM/RESEARCH entries, and public MP3 reachability.
 - Recovery sync retries R2 publication when NotebookLM audio finishes rendering after the initial publish window.
+- Each requested edition must contain at least two stories before NotebookLM is called. A short pack fails with `insufficient_current_evidence` and records the edition and observed count.
+- Article capture records its extraction method and falls back to structured JSON-LD article text when a publisher page exposes only a short client-rendered shell.
 
 ## Current defaults
 
@@ -146,4 +148,3 @@ python notebooklm-briefing-pipeline\scripts\sync_podcast_feed_to_r2.py --recent 
 ## Security note
 
 This workflow touches email, Discord, Google/NotebookLM, Cloudflare, and public podcast infrastructure. Treat config files and runtime logs as sensitive. Use app passwords/tokens via local config or environment variables only.
-

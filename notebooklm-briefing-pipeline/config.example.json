@@ -47,10 +47,10 @@
     "port": 8788,
     "base_url": "https://podcast.example.com",
     "site_url": "https://podcast.example.com",
-    "title": "Ashish's AI News Briefings",
+    "title": "AI News Briefings",
     "description": "Morning and evening AI news briefings, plus research paper deep dives.",
-    "author": "Ashish Bhatia",
-    "owner_name": "Ashish Bhatia",
+    "author": "AI News Briefings",
+    "owner_name": "Podcast Owner",
     "owner_email": "owner@example.com",
     "language": "en-us",
     "explicit": "false",
@@ -71,6 +71,7 @@
     "r2_audio_retention_max_gb": 8.0
   },
   "pipeline": {
+    "minimum_stories_for_audio": 2,
     "am_target_items": 15,
     "pm_target_items": 10,
     "priority_score_threshold": 9.0,
