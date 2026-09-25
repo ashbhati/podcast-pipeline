@@ -5,7 +5,7 @@ Maps a BriefingItem to one of the six learning streams using a
 keyword/score heuristic. No external dependencies.
 
 Streams (in priority order for pack building):
-  Ashish's Priority Reads  – highest-value items (Essential rating OR score >= threshold)
+  Priority Reads           – highest-value items (Essential rating OR score >= threshold)
   AI Agents                – agentic / autonomous systems
   AI Research              – papers, benchmarks, model training
   AI Policy                – regulation, governance, law
@@ -71,7 +71,7 @@ def classify_item(item: BriefingItem, priority_score: float = _PRIORITY_SCORE) -
     """
     normalized_score = item.score_out_of_10
     if item.rating == "Essential" or (normalized_score is not None and normalized_score >= priority_score):
-        return "Ashish's Priority Reads"
+        return "Priority Reads"
 
     # Build a single lowercase search corpus from all text fields
     corpus = " ".join(
@@ -106,4 +106,3 @@ def classify_all(
         if not item.stream:
             item.stream = classify_item(item, priority_score)
     return items
-

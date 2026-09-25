@@ -542,10 +542,10 @@ def build_rss_xml(config: dict) -> str:
     base_url = build_base_url(bridge_cfg)
     token = str(bridge_cfg.get("token") or "").strip()
     token_qs = f"?token={token}" if token else ""
-    title = str(bridge_cfg.get("title") or "Ashish's AI News Briefings")
+    title = str(bridge_cfg.get("title") or "AI News Briefings")
     description = str(bridge_cfg.get("description") or "Morning and evening AI news briefings, plus research paper deep dives.")
     site_url = str(bridge_cfg.get("site_url") or (base_url + token_qs)).strip()
-    author = str(bridge_cfg.get("author") or "Ashish AI Briefings")
+    author = str(bridge_cfg.get("author") or "AI News Briefings")
     owner_name = str(bridge_cfg.get("owner_name") or author)
     owner_email = str(bridge_cfg.get("owner_email") or "")
     language = str(bridge_cfg.get("language") or "en-us")
@@ -641,7 +641,7 @@ def build_ab_test_rss_xml(config: dict) -> str:
     token_qs = f"?token={token}" if token else ""
     site_url = str(bridge_cfg.get("site_url") or (base_url + token_qs)).strip()
     image_url = str(bridge_cfg.get("image_url") or f"{base_url}/static/cover.png{token_qs}").strip()
-    author = str(bridge_cfg.get("author") or "Ashish AI Briefings")
+    author = str(bridge_cfg.get("author") or "AI News Briefings")
     explicit = str(bridge_cfg.get("explicit") or "false").lower()
     owner_name = str(bridge_cfg.get("owner_name") or author)
     owner_email = str(bridge_cfg.get("owner_email") or "")
@@ -691,7 +691,7 @@ def build_ab_test_rss_xml(config: dict) -> str:
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
         "<rss version=\"2.0\" xmlns:itunes=\"http://www.itunes.com/dtds/podcast-1.0.dtd\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\">",
         "  <channel>",
-        f"    <title>{escape(str(bridge_cfg.get('title') or 'Ashish AI Briefings'))} — A/B Test</title>",
+        f"    <title>{escape(str(bridge_cfg.get('title') or 'AI News Briefings'))} — A/B Test</title>",
         f"    <link>{escape(site_url)}</link>",
         "    <description>WAV vs MP3 playback test for a single episode.</description>",
         "    <language>en-us</language>",
@@ -771,4 +771,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

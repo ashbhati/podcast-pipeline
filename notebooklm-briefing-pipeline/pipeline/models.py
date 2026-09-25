@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import List, Optional
 
 STREAMS = [
-    "Ashish's Priority Reads",
+    "Priority Reads",
     "AI Products",
     "AI Research",
     "AI Agents",
@@ -94,4 +94,3 @@ class BriefingItem:
         # Drop computed fields before reconstructing
         d = {k: v for k, v in d.items() if k != "item_id"}
         return cls(**{k: v for k, v in d.items() if k in cls.__dataclass_fields__})
-

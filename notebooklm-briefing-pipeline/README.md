@@ -85,7 +85,7 @@ notebooklm-briefing-pipeline/
 
 5. Classification
    classifier.py assigns each item to one of six streams:
-     Ashish's Priority Reads / AI Agents / AI Research /
+     Priority Reads / AI Agents / AI Research /
      AI Policy / AI Products / AI Case Studies
 
 6. Pack building
@@ -241,7 +241,7 @@ Expected per-story fields in briefing files:
 
 | Stream                  | Fires when…                                       |
 |-------------------------|---------------------------------------------------|
-| Ashish's Priority Reads | rating=Essential OR score ≥ 9.0                   |
+| Priority Reads | rating=Essential OR score ≥ 9.0                   |
 | AI Agents               | agentic, multi-agent, tool use, computer use…     |
 | AI Research             | arxiv, benchmark, fine-tuning, scaling laws…      |
 | AI Policy               | regulation, congress, EU AI Act, governance…      |

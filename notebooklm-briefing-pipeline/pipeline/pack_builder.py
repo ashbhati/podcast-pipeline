@@ -31,7 +31,7 @@ from .models import BriefingItem, STREAMS
 _OUTPUT_DIR = Path(__file__).parent.parent / "outputs"
 _DEFAULT_RAW_CAPTURE_ROOT = Path(r"C:\Users\you\Projects\SecondBrain\raw\news")
 
-_PRIORITY_STREAM = "Ashish's Priority Reads"
+_PRIORITY_STREAM = "Priority Reads"
 _RATING_ORDER = {"Essential": 0, "Important": 1, "Optional": 2, "Unknown": 3}
 
 _AM_TARGET = 15
@@ -363,4 +363,3 @@ def _render_json(items: List[BriefingItem], pack_type: str, run_date: str) -> st
         },
         indent=2,
     )
-

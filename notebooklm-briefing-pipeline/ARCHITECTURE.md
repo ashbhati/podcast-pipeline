@@ -176,7 +176,7 @@ Keyword-matching against concatenated title + summary + why_bullets.
 
 | Stream                   | Priority | Key signals                              |
 |--------------------------|----------|------------------------------------------|
-| Ashish's Priority Reads  | Highest  | rating==Essential OR score≥9.0           |
+| Priority Reads            | Highest  | rating==Essential OR score≥9.0           |
 | AI Agents                | 2        | agentic, multi-agent, tool use, devin…   |
 | AI Research              | 3        | arxiv, benchmark, fine-tun, scaling…     |
 | AI Policy                | 4        | regulation, congress, EU AI Act…         |
@@ -256,7 +256,7 @@ Current limitation:
   "discord": {
     "enabled": false,          // set true + bot_token to activate intake
     "bot_token": "",           // copy from openclaw.json
-    "intake_channel_id": "1480723611458342923"
+    "intake_channel_id": "YOUR_DISCORD_CHANNEL_ID"
   },
   "notebooklm": {
     "enabled": true,
@@ -306,4 +306,3 @@ Readiness semantics:
 | SQLite state store     | ✅ Full        | briefing_items + pack_runs tables            |
 | Discord intake HTTP    | ⚠️ Partial     | Real HTTP code written; disabled until token |
 | NotebookLM publish     | ⚠️ Partial     | Uses `notebooklm-mcp-cli`; requires `nlm login` auth |
-
